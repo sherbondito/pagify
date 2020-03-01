@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="pagify.js"></script>
+  <style>
+  </style>
+</head>
+
+<body>
+  <h1>Pagify</h1>
+  <ul id="event_list" name="pg_1" class="collapsible">
+  </ul>
+  <div>
+    <button id="first">First</button>
+    <button id="previous">Previous</button>
+    <button id="next">Next</button>
+    <button id="last">Last</button>
+  </div>
+  <script>
+    let parent_dom = document.getElementById('event_list');
+
+    let html_for_item_dom = {
+      html_list_start_tag: '<li class="py-2">',
+      html_list_close_tag: '</li>'
+    }
+
+    let fields_to_include_from_json = [{
+        name: 'id',
+        html: '<h1>',
+        html_close_tag: '</h1>'
+      },
+      {
+        name: 'name',
+        html: '<h2>',
+        html_close_tag: '</h2>'
+      },
+      {
+        name: 'body',
+        html: '<h3>',
+        html_close_tag: '</h3>'
+      }
+    ];
+    async function loadPaginator() {
+      let response = await fetch('https://jsonplaceholder.typicode.com/comments');
+      // only proceed once promise is resolved
+      let data = await response.json();
+      // only proceed once second promise is resolved
+
+      console.log(data);
+
+      let options = {
+        json: data,
+        fields_to_include_from_json: fields_to_include_from_json,
+        parent_dom: parent_dom,
+        html_for_item_dom: html_for_item_dom,
+        max_events_per_page: 5,
+        buttons: {
+          first: 'first',
+          previous: 'previous',
+          next: 'next',
+          last: 'last'
+        }
+      }
+
+      let pg = new Paginator(options);
+      pg.add_event_listeners_to_buttons();
+      pg.draw_items();
+      return pg;
+    }
+    loadPaginator();
+  </script>
+</body>
+
+</html>
