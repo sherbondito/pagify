@@ -2,16 +2,16 @@ class Paginator {
 
   constructor(options)
     {
-    this.parent_dom = options.parent_dom;
-    this.max_events_per_page = options.max_events_per_page;
+    this.parentDom = options.parentDom;
+    this.maxEventsPerPage = options.maxEventsPerPage;
     this.json = options.json;
-    this.fields_to_include_from_json = options.fields_to_include_from_json;
-    this.html_for_item_dom = options.html_for_item_dom;
-    this.current_page;
-    this.item_list = [];
-    this.items_on_x_page = [];
-    this.total_pages = 1;
-    this.li_html;
+    this.fieldsToIncludeFromJson = options.fieldsToIncludeFromJson;
+    this.htmlForItemDom = options.htmlForItemDom;
+    this.currentPage;
+    this.itemList = [];
+    this.itemsOnXPage = [];
+    this.totalPages = 1;
+    this.liHtml;
     this.first = {
       button: document.getElementById(options.buttons.first),
       event: 'first'
@@ -33,140 +33,141 @@ class Paginator {
 
 
   test(){
-    let sample_list = this.make_sample_list(200);
-    this.json = sample_list;
-    this.total_pages = this.calculate_total_pages(this.item_list, this.max_events_per_page);
+    let sampleList = this.makeSampleList(200);
+    this.json = sampleList;
+    this.totalPages = this.calculateTotalPages(this.itemList, this.maxEventsPerPage);
     console.log(this);
-    this.draw_page(this.item_list, this.parent_dom);
+    this.drawPage(this.itemList, this.parentDom);
   }
 
-  draw_items(){
-    this.total_pages = this.calculate_total_pages(this.json, this.max_events_per_page);
-    this.draw_page(this.json, this.parent_dom);
+  drawItems(){
+    this.totalPages = this.calculateTotalPages(this.json, this.maxEventsPerPage);
+    this.drawPage(this.json, this.parentDom);
     console.log(this);
   }
 
-  add_event_listeners_to_buttons(buttons=this.buttons){
+  addEventListenersToButtons(buttons=this.buttons, parentDom=this.parentDom){
     for (let i = 0; i < buttons.length; i++) {
       buttons[i].button.addEventListener('click', () => {
-        this.next_page_state(`${buttons[i].event}`);
+        this.nextPageState(`${buttons[i].event}`);
       })
     }
+    parentDom.setAttribute("name", "pg_1");
   }
 
-  make_sample_list(num_events){
-    for(let i=1;i<num_events;i++){
-      let item_in_list = {
+  makeSampleList(numEvents){
+    for(let i=1;i<numEvents;i++){
+      let itemInList = {
         title: `Item ${[i]}`,
         description: `Description of ${[i]}`
       };
-      this.item_list.push(item_in_list);
+      this.itemList.push(itemInList);
     }
-    console.log(this.item_list)
-    return this.item_list;
+    console.log(this.itemList)
+    return this.itemList;
   }
 
-  items_on_this_page(items, current_page_number, item_limit){
-    let item_result = [];
-    let past_items;
-    if (current_page_number == 1){
-      past_items = 0;
+  itemsOnThisPage(items, currentPageNumber, itemLimit){
+    let itemResult = [];
+    let pasItems;
+    if (currentPageNumber == 1){
+      pasItems = 0;
     }
     else{
-      past_items = (item_limit * current_page_number) - item_limit;
+      pasItems = (itemLimit * currentPageNumber) - itemLimit;
     }
     let count = 0;
-    for (let i=past_items; i < items.length; i++){
-      if (count < item_limit){
-        item_result.push(items[i]);
+    for (let i=pasItems; i < items.length; i++){
+      if (count < itemLimit){
+        itemResult.push(items[i]);
         count ++;
       }
     }
-    this.items_on_x_page = item_result;
-    return item_result;
+    this.itemsOnXPage = itemResult;
+    return itemResult;
   }
 
-  generate_item_html(item, fields_to_include, list_html){
-    let html_list_start_tag = list_html.html_list_start_tag;
-    let html_list_close_tag = list_html.html_list_close_tag;
-    let html_arr = [];
-    let field, value, html, html_close_tag, generated_html;
-    html_arr.push(html_list_start_tag);
-    for (let i = 0; i < fields_to_include.length; i++){
-      field = fields_to_include[i].name;
+  generateItemHtml(item, fieldsToInclude, listHtml){
+    let htmlListStartTag = listHtml.htmlListStartTag;
+    let htmlListCloseTag = listHtml.htmlListCloseTag;
+    let htmlArr = [];
+    let field, value, html, htmlCloseTag, generatedHtml;
+    htmlArr.push(htmlListStartTag);
+    for (let i = 0; i < fieldsToInclude.length; i++){
+      field = fieldsToInclude[i].name;
       value = item[field]
-      html = fields_to_include[i].html;
-      html_close_tag = fields_to_include[i].html_close_tag;
-      html_arr.push(html + value + html_close_tag);
+      html = fieldsToInclude[i].html;
+      htmlCloseTag = fieldsToInclude[i].htmlCloseTag;
+      htmlArr.push(html + value + htmlCloseTag);
     }
-    html_arr.push(html_list_close_tag);
-    generated_html = html_arr.join('\n');
-    return generated_html;
+    htmlArr.push(htmlListCloseTag);
+    generatedHtml = htmlArr.join('\n');
+    return generatedHtml;
 }
 
-  draw_page(items, parent_dom){
-  parent_dom.innerHTML = "";
+  drawPage(items, parentDom){
+  parentDom.innerHTML = "";
   for (let i=0; i< items.length; i++){
-    if ([i] <= this.max_events_per_page-1){
-      let html = this.generate_item_html(items[i], this.fields_to_include_from_json, this.html_for_item_dom);
-      parent_dom.innerHTML += html;
+    if ([i] <= this.maxEventsPerPage-1){
+      let html = this.generateItemHtml(items[i], this.fieldsToIncludeFromJson, this.htmlForItemDom);
+      parentDom.innerHTML += html;
     }
   }
 }
 
-  calculate_total_pages(items,item_limit){
-  let num_pages = 0;
+  calculateTotalPages(items,itemLimit){
+  let numPages = 0;
   if (items.length == 0){
-    num_pages = 1;
+    numPages = 1;
   }
   else {
-    num_pages = Math.ceil(items.length/item_limit);
+    numPages = Math.ceil(items.length/itemLimit);
   }
   console.log(items.length);
-  console.log(num_pages);
-  return num_pages;
+  console.log(numPages);
+  return numPages;
 }
 
 
 // Your dom element needs to have a name equal to pg_1
-// buttons should have event listners which trigger "this.next_page_state(event_type) on click"
-  next_page_state(event_type){
+// buttons should have event listners which trigger "this.nextPageState(eventType) on click"
+  nextPageState(eventType){
   let re = /_(.*)/ig
-  let initial_page = parseInt(re.exec(this.parent_dom.getAttribute('name'))[1])
-  this.current_page = initial_page;
-  switch(event_type) {
+  let initialPage = parseInt(re.exec(this.parentDom.getAttribute('name'))[1])
+  this.currentPage = initialPage;
+  switch(eventType) {
     case 'first':
-      this.current_page = 1;
+      this.currentPage = 1;
       break;
     case 'previous':
-      if (this.current_page == 1){
-        this.current_page = 1;
+      if (this.currentPage == 1){
+        this.currentPage = 1;
       }
       else{
-        this.current_page -= 1;
+        this.currentPage -= 1;
       }
       break;
     case 'next':
-      if (this.current_page == this.total_pages){
-        this.current_page = this.total_pages;
+      if (this.currentPage == this.totalPages){
+        this.currentPage = this.totalPages;
       }
       else {
-        this.current_page += 1;
-        console.log([this.current_page, event_type]);
+        this.currentPage += 1;
+        console.log([this.currentPage, eventType]);
       }
       break;
     case 'last':
-      this.current_page = this.total_pages;
+      this.currentPage = this.totalPages;
       break;
     default:
       break;
   }
-  this.parent_dom.setAttribute("name", `pg_${this.current_page}`);
-  this.items_on_x_page = this.items_on_this_page(this.json, this.current_page, this.max_events_per_page);
-  this.draw_page(this.items_on_x_page, this.parent_dom);
+  this.parentDom.setAttribute("name", `pg_${this.currentPage}`);
+  this.itemsOnXPage = this.itemsOnThisPage(this.json, this.currentPage, this.maxEventsPerPage);
+  this.drawPage(this.itemsOnXPage, this.parentDom);
   let result = {
-    items: this.items_on_x_page,
-    new_page_number: this.current_page
+    items: this.itemsOnXPage,
+    newPageNumber: this.currentPage
   }
   return result;
   }

@@ -8,7 +8,7 @@
 
 ## Result of Pagify
 
-* A Root HTML DOM element will be created, as defined by the 'html_for_list' object
+* A Root HTML DOM element will be created, as defined by the 'parentDom' object
 * Child DOM elements will be placed inside of that list, each with custom HTML as defined by you
 * First, Previous, Next, and Last event listeners to navigate through the objects
 * Max items per page definable
@@ -20,24 +20,24 @@
 ```
 let options = {
   json: data,
-  fields_to_include_from_json: [
+  fieldsToIncludeFromJson: [
     {
       name: 'name',
       html: '<h2>',
-      html_close_tag: '</h2>'
+      htmlCloseTag: '</h2>'
     },
     {
       name: 'job',
       html: '<h3>',
-      html_close_tag: '</h3>'
+      htmlCloseTag: '</h3>'
     }
   ],
-  parent_dom: document.getElementById('event_list'),
-  html_for_item_dom: {
-    html_list_start_tag: '<li>',
-    html_list_close_tag: '</li>'
+  parentDom: document.getElementById('eventList'),
+  htmlForItemDom: {
+    htmlListStartTag: '<li>',
+    htmlListCloseTag: '</li>'
   },
-  max_events_per_page: 10,
+  maxEventsPerPage: 10,
   buttons: {
     first: 'first',
     previous: 'previous',
@@ -50,13 +50,14 @@ let pg = new Paginator(options);
 
 ```
 
-Simply use the built in add_event_listeners_to_buttons method to attach the first, previous, next, and last buttons to the paginated data
+Simply use the built in addEventListenersToButtons method to attach the first, previous, next, and last buttons to the paginated data
+
 ```
-pg.add_event_listeners_to_buttons();
+pg.addEventListenersToButtons();
 ```
 Finally, draw the items on the page:
 ```
-pg.draw_items();
+pg.drawItems();
 ```
 ## Define Your JSON Data Source
 
@@ -82,48 +83,48 @@ let data = [{
 This will determine how each field from the data source above appears in your paginated list.
 
 
-#### parent_dom
-:warning: *: make sure the name of your parent dom element contains "pg_1" - this determines the starting page number of your paginator*
+#### parentDom
+:octocat: the library will change the name of your parentDom element in order to keep track of the pages.
 
 Root / parent DOM element that contains your list of paginated items.
 
 ```
-<ul id="event_list" name="pg_1">
+<ul id="eventList" name="pg_1">
 </ul>
 ```
 
-Safe to say this will usually be a ul
+It is safe to say this will usually be a ul, but it could be anything that you want to act as the container for your pages of data.
 
 ```
-let parent_dom = document.getElementById('event_list');
+let parentDom = document.getElementById('eventList');
 ```
 
-#### html_for_item_dom
+#### htmlForItemDom
 
 The html that will wrap around each item in your data set.
 
-Safe to say this will usually be an li
+Safe to say this will usually be an li, but it could be anything that you want to act as the individual object for each item in your pages.
 ```
-let html_for_item_dom = {
-  html_list_start_tag: '<li>',
-  html_list_close_tag: '</li>'
+let htmlForItemDom = {
+  htmlListStartTag: '<li>',
+  htmlListCloseTag: '</li>'
 }
 ```
 
 
-#### fields_to_include_from_json
+#### fieldsToIncludeFromJson
 Describes which fields you would like to include from your data source, and their associated html / styling.
 ```
-let fields_to_include_from_json = [{
+let fieldsToIncludeFromJson = [{
   name: 'title',
   html: '<div class="collapsible-header rounded-t-md center-align h2 georgia">',
-  html_close_tag: '</div>'
+  htmlCloseTag: '</div>'
 
 },
 {
   name: 'description',
   html: '<div class="collapsible-body rounded-b-lg georgia white"><span class="f1">',
-  html_close_tag: '</span></div>'
+  htmlCloseTag: '</span></div>'
 }];
 
 ```
