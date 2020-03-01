@@ -3,7 +3,7 @@
 ## Include in your project
 
 ```
-<script src="paginator.js"></script>
+<script src="pagify.js"></script>
 ```
 
 ## Result of Pagify
