@@ -105,7 +105,7 @@ The html that will wrap around each item in your data set.
 Safe to say this will usually be an li
 ```
 let html_for_item_dom = {
-  html_list_start_tag: '<li class="py-2">',
+  html_list_start_tag: '<li>',
   html_list_close_tag: '</li>'
 }
 ```
