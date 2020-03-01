@@ -14,7 +14,7 @@
 * Max items per page definable
 
 
-![Pagify Demo](https://i.imgur.com/CnyXbkO.gifv)
+![Pagify Demo](demo.gif)
 
 ## Quick Start
 ```
