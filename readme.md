@@ -20,25 +20,21 @@
 ```
 let options = {
   json: data,
-  fields_to_include_from_json: [{
-      name: 'id',
-      html: '<h1>',
-      html_close_tag: '</h1>'
-    },
+  fields_to_include_from_json: [
     {
       name: 'name',
       html: '<h2>',
       html_close_tag: '</h2>'
     },
     {
-      name: 'body',
+      name: 'job',
       html: '<h3>',
       html_close_tag: '</h3>'
     }
   ],
   parent_dom: document.getElementById('event_list'),
   html_for_item_dom: {
-    html_list_start_tag: '<li class="py-2">',
+    html_list_start_tag: '<li>',
     html_list_close_tag: '</li>'
   },
   max_events_per_page: 10,
